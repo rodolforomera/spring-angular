@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -26,7 +27,7 @@ public class ServicoPrestadoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ServicoPrestado salvar(@RequestBody ServicoPrestadoDto dto) {
+    public ServicoPrestado salvar(@RequestBody @Valid ServicoPrestadoDto dto) {
 
         LocalDate data = LocalDate.parse(dto.getData(), DateTimeFormatter.ofPattern("dd/MM/uuuu"));
         Integer idCliente = dto.getIdCliente();
@@ -48,7 +49,8 @@ public class ServicoPrestadoController {
     public List<ServicoPrestado> pesquisar(
             @RequestParam(value = "nome", required = false, defaultValue = "") String nome,
             @RequestParam(value = "mes", required = false) Integer mes) {
-        return repository.findByNomeClienteAndMes("%" + nome + "%", mes);
+        List<ServicoPrestado> s = repository.findByNomeClienteAndMes("%" + nome + "%", mes);
+        return s;
     }
 
 }
